@@ -1,16 +1,25 @@
 /*=============================================================
  Lucien Resident Directory
  File : js/ui.js
- Part 1 - Resident Profile
-==============================================================*/
+ Version : 2.0
+ Part 1
+=============================================================*/
 
-/*-------------------------------------------------------------
- Render Resident
---------------------------------------------------------------*/
+"use strict";
 
-function renderResident(resident){
+/*=============================================================
+ Current Resident
+=============================================================*/
 
-    if(!resident){
+let currentResident = null;
+
+/*=============================================================
+ Main Render Function
+=============================================================*/
+
+function renderResident(resident) {
+
+    if (!resident) {
 
         updateStatus(
             "Resident not found.",
@@ -23,644 +32,472 @@ function renderResident(resident){
 
     currentResident = resident;
 
-    document
-        .getElementById("profileSection")
-        .classList.remove("hidden");
+    showAllSections();
 
-    document
-        .getElementById("familySection")
-        .classList.remove("hidden");
+    populateOwner();
 
-    document
-        .getElementById("vehicleSection")
-        .classList.remove("hidden");
+    renderSummary();
 
-    document
-        .getElementById("emergencySection")
-        .classList.remove("hidden");
+    renderFamily(currentResident.family);
 
-    populateOwner(resident);
-    
-    registerButtons();
+    renderEmergency(currentResident.emergency);
 
-    renderFamily(resident.family);
+    renderVehicles(currentResident.vehicles);
 
-    renderEmergency(resident.emergency);
-
-    renderVehicles(resident.vehicles);
+    registerActionButtons();
 
     updateStatus(
+
         "Apartment " +
-        resident.apartment +
+
+        currentResident.apartment +
+
         " loaded successfully.",
+
         "success"
+
     );
 
 }
 
 
-/*-------------------------------------------------------------
+/*=============================================================
  Owner Profile
---------------------------------------------------------------*/
+=============================================================*/
 
-function populateOwner(resident){
+function populateOwner() {
 
-    document.getElementById("ownerName").innerHTML =
+    if (!currentResident)
+        return;
 
-        resident.owner.name +
+    const owner = currentResident.owner;
+
+    setText("ownerName",
+
+        owner.name +
 
         " " +
 
-        resident.owner.surname;
+        owner.surname
 
-    document.getElementById("occupancyType").innerHTML =
+    );
 
-        resident.owner.occupiedBy;
+    setText(
 
-    document.getElementById("apartmentNo").innerHTML =
+        "occupancyType",
 
-        resident.apartment;
+        owner.occupiedBy
 
-    document.getElementById("floor").innerHTML =
+    );
 
-        resident.owner.floor;
+    setText(
 
-    document.getElementById("moveInDate").innerHTML =
+        "apartmentNo",
 
-        formatDate(
-            resident.owner.moveIn
-        );
+        currentResident.apartment
 
-    document.getElementById("mobile").innerHTML =
+    );
 
-        formatMobile(
-            resident.owner.mobile
-        );
+    setText(
 
-    document.getElementById("email").innerHTML =
+        "floor",
 
-        resident.owner.email;
+        owner.floor
 
-    document.getElementById("address").innerHTML =
+    );
 
-        resident.owner.address;
+    setText(
 
-}
+        "moveInDate",
 
+        formatDate(owner.moveIn)
 
-/*-------------------------------------------------------------
- Action Buttons
---------------------------------------------------------------*/
+    );
 
-function registerButtons(){
+    setText(
 
-    document
-        .getElementById("callBtn")
-        .onclick = ()=>{
+        "mobile",
 
-            makeCall(
-                currentResident.owner.mobile
-            );
+        owner.mobile
 
-        };
+    );
 
-    document
-        .getElementById("whatsappBtn")
-        .onclick = ()=>{
+    setText(
 
-            openWhatsApp(
-                currentResident.owner.mobile
-            );
+        "email",
 
-        };
+        owner.email
 
-    document
-        .getElementById("copyBtn")
-        .onclick = ()=>{
+    );
 
-            copyToClipboard(
-                currentResident.owner.mobile
-            );
+    setText(
 
-        };
+        "officeAddress",
 
-    document
-        .getElementById("printBtn")
-        .onclick = ()=>{
+        owner.office
 
-            printProfile();
+    );
 
-        };
+    setText(
+
+        "address",
+
+        owner.address
+
+    );
 
 }
 
 
-/*-------------------------------------------------------------
- Refresh Buttons
---------------------------------------------------------------*/
+/*=============================================================
+ Summary
+=============================================================*/
 
-function refreshProfile(){
+function renderSummary() {
 
-    if(!currentResident)
+    if (!currentResident)
         return;
 
-    populateOwner(currentResident);
+    setText(
 
-    registerButtons();
+        "familyCount",
+
+        currentResident.family.length
+
+    );
+
+    setText(
+
+        "vehicleCount",
+
+        currentResident.vehicles.length
+
+    );
+
+    setText(
+
+        "emergencyCount",
+
+        currentResident.emergency.length
+
+    );
+
+    setText(
+
+        "occupancySummary",
+
+        currentResident.owner.occupiedBy
+
+    );
 
 }
 
 
-/*-------------------------------------------------------------
- Clear Profile
---------------------------------------------------------------*/
+/*=============================================================
+ Generic Setter
+=============================================================*/
 
-function clearProfile(){
+function setText(id, value) {
 
-    document.getElementById("ownerName").innerHTML="";
+    const element =
 
-    document.getElementById("occupancyType").innerHTML="";
+        document.getElementById(id);
 
-    document.getElementById("apartmentNo").innerHTML="-";
+    if (!element)
+        return;
 
-    document.getElementById("floor").innerHTML="-";
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
 
-    document.getElementById("moveInDate").innerHTML="-";
+        element.innerHTML = "-";
 
-    document.getElementById("mobile").innerHTML="-";
-
-    document.getElementById("email").innerHTML="-";
-
-    document.getElementById("address").innerHTML="-";
-
-}
-
-
-/*-------------------------------------------------------------
- Current Resident
---------------------------------------------------------------*/
-
-let currentResident = null;
-
-
-/*-------------------------------------------------------------
- Initialize
---------------------------------------------------------------*/
-
-document.addEventListener(
-
-    "DOMContentLoaded",
-
-    ()=>{
-
-        registerButtons();
+        return;
 
     }
 
-);
+    element.innerHTML = value;
+
+}
+
+
+/*=============================================================
+ Show All Sections
+=============================================================*/
+
+function showAllSections() {
+
+    [
+
+        "profileSection",
+
+        "familySection",
+
+        "emergencySection",
+
+        "vehicleSection",
+
+        "summarySection"
+
+    ]
+
+    .forEach(section => {
+
+        document
+
+            .getElementById(section)
+
+            .classList.remove("hidden");
+
+    });
+
+}
+
+
+/*=============================================================
+ Hide All Sections
+=============================================================*/
+
+function hideAllSections() {
+
+    [
+
+        "profileSection",
+
+        "familySection",
+
+        "emergencySection",
+
+        "vehicleSection",
+
+        "summarySection"
+
+    ]
+
+    .forEach(section => {
+
+        document
+
+            .getElementById(section)
+
+            .classList.add("hidden");
+
+    });
+
+}
 /*=============================================================
  Family Members
-==============================================================*/
+=============================================================*/
 
-/*-------------------------------------------------------------
- Render Family Members
---------------------------------------------------------------*/
+function renderFamily(family) {
 
-function renderFamily(family){
-
-    const tbody =
-        document.getElementById(
-            "familyTableBody"
-        );
+    const tbody = document.getElementById("familyTableBody");
 
     tbody.innerHTML = "";
 
-    if(
-        !family ||
-        family.length===0
-    ){
+    if (!family || family.length === 0) {
 
-        tbody.innerHTML =
+        tbody.appendChild(
 
-        `
-        <tr>
+            createEmptyRow(
+                3,
+                "No family member information available."
+            )
 
-            <td colspan="3"
-                class="empty">
-
-                No family member information available
-
-            </td>
-
-        </tr>
-        `;
+        );
 
         return;
 
     }
 
-    family.forEach(member=>{
+    family.forEach(member => {
 
-        tbody.appendChild(
+        const row = document.createElement("tr");
 
-            createFamilyRow(member)
+        row.innerHTML = `
 
-        );
+            <td>${member.name || "-"}</td>
+
+            <td>${member.relationship || "-"}</td>
+
+            <td>${member.age || "-"}</td>
+
+        `;
+
+        tbody.appendChild(row);
 
     });
 
 }
 
 
-/*-------------------------------------------------------------
- Create Family Row
---------------------------------------------------------------*/
-
-function createFamilyRow(member){
-
-    const tr =
-        document.createElement("tr");
-
-    tr.innerHTML =
-
-    `
-    <td>
-
-        ${member.name}
-
-    </td>
-
-    <td>
-
-        ${formatRelationship(
-
-            member.relationship
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${formatAge(
-
-            member.age
-
-        )}
-
-    </td>
-    `;
-
-    return tr;
-
-}
-
-
-/*-------------------------------------------------------------
- Relationship Formatting
---------------------------------------------------------------*/
-
-function formatRelationship(value){
-
-    if(!value)
-        return "-";
-
-    value =
-        value.toString().trim();
-
-    if(value==="")
-        return "-";
-
-    return value;
-
-}
-
-
-/*-------------------------------------------------------------
- Age Formatting
---------------------------------------------------------------*/
-
-function formatAge(age){
-
-    if(
-        age===undefined ||
-        age===null
-    )
-        return "-";
-
-    age =
-        age.toString().trim();
-
-    if(age==="")
-        return "-";
-
-    return age;
-
-}
-
-
-/*-------------------------------------------------------------
- Family Count
---------------------------------------------------------------*/
-
-function familyCount(){
-
-    if(!currentResident)
-        return 0;
-
-    return currentResident.family.length;
-
-}
-
-
-/*-------------------------------------------------------------
- Family Exists
---------------------------------------------------------------*/
-
-function hasFamily(){
-
-    return familyCount()>0;
-
-}
-
-
-/*-------------------------------------------------------------
- Show / Hide Family Section
---------------------------------------------------------------*/
-
-function updateFamilySection(){
-
-    const section =
-        document.getElementById(
-            "familySection"
-        );
-
-    if(hasFamily()){
-
-        section.classList.remove(
-
-            "hidden"
-
-        );
-
-    }
-    else{
-
-        section.classList.add(
-
-            "hidden"
-
-        );
-
-    }
-
-}
 /*=============================================================
  Emergency Contacts
-==============================================================*/
+=============================================================*/
 
-/*-------------------------------------------------------------
- Render Emergency Contacts
---------------------------------------------------------------*/
+function renderEmergency(contacts) {
 
-function renderEmergency(contacts){
+    const tbody = document.getElementById("emergencyTableBody");
 
-    const tbody =
-        document.getElementById(
-            "emergencyTableBody"
-        );
+    tbody.innerHTML = "";
 
-    tbody.innerHTML="";
-
-    if(!contacts || contacts.length===0){
-
-        tbody.innerHTML=`
-        <tr>
-            <td colspan="3" class="empty">
-                No emergency contacts available
-            </td>
-        </tr>
-        `;
-
-        updateEmergencySection();
-
-        return;
-    }
-
-    contacts.forEach(contact=>{
+    if (!contacts || contacts.length === 0) {
 
         tbody.appendChild(
 
-            createEmergencyRow(contact)
+            createEmptyRow(
+                3,
+                "No emergency contact available."
+            )
 
         );
 
+        return;
+
+    }
+
+    contacts.forEach(contact => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+
+            <td>
+
+                ${contact.name || "-"}
+
+            </td>
+
+            <td>
+
+                ${contact.relationship || "-"}
+
+            </td>
+
+            <td>
+
+                <a href="tel:${contact.mobile}">
+
+                    ${contact.mobile || "-"}
+
+                </a>
+
+            </td>
+
+        `;
+
+        tbody.appendChild(row);
+
     });
-
-    updateEmergencySection();
-
-}
-
-
-/*-------------------------------------------------------------
- Create Emergency Row
---------------------------------------------------------------*/
-
-function createEmergencyRow(contact){
-
-    const tr=document.createElement("tr");
-
-    tr.innerHTML=`
-
-        <td>${contact.name}</td>
-
-        <td>${contact.relationship}</td>
-
-        <td>
-
-            <a href="tel:${contact.mobile}">
-
-                ${formatMobile(contact.mobile)}
-
-            </a>
-
-        </td>
-
-    `;
-
-    return tr;
-
-}
-
-
-/*-------------------------------------------------------------
- Emergency Section
---------------------------------------------------------------*/
-
-function updateEmergencySection(){
-
-    const section=document.getElementById(
-        "emergencySection"
-    );
-
-    if(
-        currentResident &&
-        currentResident.emergency.length>0
-    ){
-
-        section.classList.remove("hidden");
-
-    }
-    else{
-
-        section.classList.add("hidden");
-
-    }
 
 }
 
 
 /*=============================================================
  Vehicle Details
-==============================================================*/
+=============================================================*/
 
-/*-------------------------------------------------------------
- Render Vehicles
---------------------------------------------------------------*/
+function renderVehicles(vehicles) {
 
-function renderVehicles(vehicles){
+    const tbody = document.getElementById("vehicleTableBody");
 
-    const tbody=
-        document.getElementById(
-            "vehicleTableBody"
+    tbody.innerHTML = "";
+
+    if (!vehicles || vehicles.length === 0) {
+
+        tbody.appendChild(
+
+            createEmptyRow(
+                4,
+                "No vehicle information available."
+            )
+
         );
-
-    tbody.innerHTML="";
-
-    if(!vehicles || vehicles.length===0){
-
-        tbody.innerHTML=`
-
-        <tr>
-
-            <td colspan="4"
-                class="empty">
-
-                No vehicle information available
-
-            </td>
-
-        </tr>
-
-        `;
-
-        updateVehicleSection();
 
         return;
 
     }
 
-    vehicles.forEach(vehicle=>{
+    vehicles.forEach(vehicle => {
 
-        tbody.appendChild(
+        const row = document.createElement("tr");
 
-            createVehicleRow(vehicle)
+        row.innerHTML = `
 
-        );
+            <td>
+
+                ${vehicle.type || "-"}
+
+            </td>
+
+            <td>
+
+                ${vehicle.make || "-"}
+
+            </td>
+
+            <td>
+
+                ${vehicle.model || "-"}
+
+            </td>
+
+            <td>
+
+                <strong>
+
+                    ${vehicle.plate || "-"}
+
+                </strong>
+
+            </td>
+
+        `;
+
+        tbody.appendChild(row);
 
     });
-
-    updateVehicleSection();
 
 }
 
 
-/*-------------------------------------------------------------
- Create Vehicle Row
---------------------------------------------------------------*/
+/*=============================================================
+ Common Empty Row
+=============================================================*/
 
-function createVehicleRow(vehicle){
+function createEmptyRow(colspan, message) {
 
-    const tr=document.createElement("tr");
+    const tr = document.createElement("tr");
 
-    tr.innerHTML=`
+    const td = document.createElement("td");
 
-        <td>${vehicle.type}</td>
+    td.colSpan = colspan;
 
-        <td>${vehicle.make}</td>
+    td.className = "empty";
 
-        <td>${vehicle.model}</td>
+    td.textContent = message;
 
-        <td>
-
-            <strong>
-
-                ${vehicle.plate}
-
-            </strong>
-
-        </td>
-
-    `;
+    tr.appendChild(td);
 
     return tr;
 
 }
 
 
-/*-------------------------------------------------------------
- Vehicle Section
---------------------------------------------------------------*/
-
-function updateVehicleSection(){
-
-    const section=document.getElementById(
-        "vehicleSection"
-    );
-
-    if(
-        currentResident &&
-        currentResident.vehicles.length>0
-    ){
-
-        section.classList.remove("hidden");
-
-    }
-    else{
-
-        section.classList.add("hidden");
-
-    }
-
-}
-
-
-/*-------------------------------------------------------------
- Vehicle Count
---------------------------------------------------------------*/
-
-function vehicleCount(){
-
-    if(!currentResident)
-        return 0;
-
-    return currentResident.vehicles.length;
-
-}
 /*=============================================================
- UI Refresh
-==============================================================*/
+ Refresh Current Resident
+=============================================================*/
 
-/*-------------------------------------------------------------
- Refresh Entire Screen
---------------------------------------------------------------*/
+function refreshResident() {
 
-function refreshUI(){
-
-    if(!currentResident)
+    if (!currentResident)
         return;
 
-    populateOwner(currentResident);
+    populateOwner();
+
+    renderSummary();
 
     renderFamily(currentResident.family);
 
@@ -668,376 +505,102 @@ function refreshUI(){
 
     renderVehicles(currentResident.vehicles);
 
-    registerButtons();
-
 }
+/*=============================================================
+ Action Buttons
+=============================================================*/
 
+function registerActionButtons() {
 
-/*-------------------------------------------------------------
- Hide All Sections
---------------------------------------------------------------*/
+    const callBtn = document.getElementById("callBtn");
+    const whatsappBtn = document.getElementById("whatsappBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const printBtn = document.getElementById("printBtn");
 
-function hideAllSections(){
+    if (callBtn) {
+        callBtn.onclick = () => {
 
-    document
-        .getElementById("profileSection")
-        .classList.add("hidden");
+            if (!currentResident) return;
 
-    document
-        .getElementById("familySection")
-        .classList.add("hidden");
+            makeCall(currentResident.owner.mobile);
 
-    document
-        .getElementById("emergencySection")
-        .classList.add("hidden");
+        };
+    }
 
-    document
-        .getElementById("vehicleSection")
-        .classList.add("hidden");
+    if (whatsappBtn) {
+        whatsappBtn.onclick = () => {
 
-}
+            if (!currentResident) return;
 
+            openWhatsApp(currentResident.owner.mobile);
 
-/*-------------------------------------------------------------
- Clear Resident Data
---------------------------------------------------------------*/
+        };
+    }
 
-function clearResident(){
+    if (copyBtn) {
+        copyBtn.onclick = () => {
 
-    currentResident=null;
+            if (!currentResident) return;
 
-    clearProfile();
+            copyToClipboard(currentResident.owner.mobile);
 
-    document.getElementById("familyTableBody").innerHTML=
-    `
-    <tr>
-        <td colspan="3" class="empty">
-            No family member information available
-        </td>
-    </tr>
-    `;
+        };
+    }
 
-    document.getElementById("emergencyTableBody").innerHTML=
-    `
-    <tr>
-        <td colspan="3" class="empty">
-            No emergency contacts available
-        </td>
-    </tr>
-    `;
-
-    document.getElementById("vehicleTableBody").innerHTML=
-    `
-    <tr>
-        <td colspan="4" class="empty">
-            No vehicle information available
-        </td>
-    </tr>
-    `;
-
-    hideAllSections();
-
-}
-
-
-/*-------------------------------------------------------------
- Refresh Button
---------------------------------------------------------------*/
-
-const refreshButton=document.getElementById("refreshBtn");
-
-if(refreshButton){
-
-    refreshButton.addEventListener(
-
-        "click",
-
-        ()=>{
-
-            document.getElementById("searchBox").value="";
-
-            document.getElementById("apartmentSelect").selectedIndex=0;
-
-            clearResident();
-
-            loadExcel();
-
-        }
-
-    );
-
-}
-
-
-/*-------------------------------------------------------------
- Double Click Apartment Number
- Copy Apartment Number
---------------------------------------------------------------*/
-
-const apartmentLabel=document.getElementById("apartmentNo");
-
-if(apartmentLabel){
-
-    apartmentLabel.addEventListener(
-
-        "dblclick",
-
-        ()=>{
-
-            if(currentResident){
-
-                copyToClipboard(
-
-                    currentResident.apartment
-
-                );
-
-            }
-
-        }
-
-    );
-
-}
-
-
-/*-------------------------------------------------------------
- Double Click Mobile
- Copy Mobile
---------------------------------------------------------------*/
-
-const mobileLabel=document.getElementById("mobile");
-
-if(mobileLabel){
-
-    mobileLabel.addEventListener(
-
-        "dblclick",
-
-        ()=>{
-
-            if(currentResident){
-
-                copyToClipboard(
-
-                    currentResident.owner.mobile
-
-                );
-
-            }
-
-        }
-
-    );
-
-}
-
-
-/*-------------------------------------------------------------
- Keyboard Shortcuts
-
-Ctrl + F = Search Box
-
-Esc = Clear
-
-Ctrl + P = Print
---------------------------------------------------------------*/
-
-document.addEventListener(
-
-    "keydown",
-
-    function(e){
-
-        if(e.ctrlKey && e.key==="f"){
-
-            e.preventDefault();
-
-            document
-                .getElementById("searchBox")
-                .focus();
-
-        }
-
-        if(e.key==="Escape"){
-
-            clearResident();
-
-            document
-                .getElementById("searchBox")
-                .value="";
-
-            document
-                .getElementById("apartmentSelect")
-                .selectedIndex=0;
-
-        }
-
-        if(e.ctrlKey && e.key==="p"){
-
-            e.preventDefault();
+    if (printBtn) {
+        printBtn.onclick = () => {
 
             printProfile();
 
-        }
-
+        };
     }
-
-);
-
-
-/*-------------------------------------------------------------
- Initialize UI
---------------------------------------------------------------*/
-
-document.addEventListener(
-
-    "DOMContentLoaded",
-
-    ()=>{
-
-        hideAllSections();
-
-        registerButtons();
-
-    }
-
-);
-
-/*-------------------------------------------------------------
- Refresh Vehicle Data
---------------------------------------------------------------*/
-
-function refreshVehicles(){
-
-    if(!currentResident)
-        return;
-
-    renderVehicles(
-
-        currentResident.vehicles
-
-    );
 
 }
 
-/*-------------------------------------------------------------
- Refresh Family
---------------------------------------------------------------*/
 
-function refreshFamily(){
-
-    if(!currentResident)
-        return;
-
-    renderFamily(
-
-        currentResident.family
-
-    );
-
-    updateFamilySection();
-
-}
 /*=============================================================
- Emergency Contacts
-==============================================================*/
+ Double Click Support
+=============================================================*/
 
-/*-------------------------------------------------------------
- Render Emergency Contacts
---------------------------------------------------------------*/
+function registerCopyActions() {
 
-function renderEmergency(contacts){
+    const apartment = document.getElementById("apartmentNo");
+    const mobile = document.getElementById("mobile");
+    const email = document.getElementById("email");
 
-    const tbody =
-        document.getElementById(
-            "emergencyTableBody"
-        );
+    if (apartment) {
 
-    tbody.innerHTML="";
+        apartment.ondblclick = () => {
 
-    if(!contacts || contacts.length===0){
+            if (!currentResident) return;
 
-        tbody.innerHTML=`
-        <tr>
-            <td colspan="3" class="empty">
-                No emergency contacts available
-            </td>
-        </tr>
-        `;
+            copyToClipboard(currentResident.apartment);
 
-        updateEmergencySection();
-
-        return;
-    }
-
-    contacts.forEach(contact=>{
-
-        tbody.appendChild(
-
-            createEmergencyRow(contact)
-
-        );
-
-    });
-
-    updateEmergencySection();
-
-}
-
-
-/*-------------------------------------------------------------
- Create Emergency Row
---------------------------------------------------------------*/
-
-function createEmergencyRow(contact){
-
-    const tr=document.createElement("tr");
-
-    tr.innerHTML=`
-
-        <td>${contact.name}</td>
-
-        <td>${contact.relationship}</td>
-
-        <td>
-
-            <a href="tel:${contact.mobile}">
-
-                ${formatMobile(contact.mobile)}
-
-            </a>
-
-        </td>
-
-    `;
-
-    return tr;
-
-}
-
-
-/*-------------------------------------------------------------
- Emergency Section
---------------------------------------------------------------*/
-
-function updateEmergencySection(){
-
-    const section=document.getElementById(
-        "emergencySection"
-    );
-
-    if(
-        currentResident &&
-        currentResident.emergency.length>0
-    ){
-
-        section.classList.remove("hidden");
+        };
 
     }
-    else{
 
-        section.classList.add("hidden");
+    if (mobile) {
+
+        mobile.ondblclick = () => {
+
+            if (!currentResident) return;
+
+            copyToClipboard(currentResident.owner.mobile);
+
+        };
+
+    }
+
+    if (email) {
+
+        email.ondblclick = () => {
+
+            if (!currentResident) return;
+
+            copyToClipboard(currentResident.owner.email);
+
+        };
 
     }
 
@@ -1045,164 +608,100 @@ function updateEmergencySection(){
 
 
 /*=============================================================
- Vehicle Details
-==============================================================*/
+ Refresh Button
+=============================================================*/
 
-/*-------------------------------------------------------------
- Render Vehicles
---------------------------------------------------------------*/
+function registerRefreshButton() {
 
-function renderVehicles(vehicles){
+    const button = document.getElementById("refreshBtn");
 
-    const tbody=
-        document.getElementById(
-            "vehicleTableBody"
-        );
-
-    tbody.innerHTML="";
-
-    if(!vehicles || vehicles.length===0){
-
-        tbody.innerHTML=`
-
-        <tr>
-
-            <td colspan="4"
-                class="empty">
-
-                No vehicle information available
-
-            </td>
-
-        </tr>
-
-        `;
-
-        updateVehicleSection();
-
+    if (!button)
         return;
 
-    }
+    button.onclick = async () => {
 
-    vehicles.forEach(vehicle=>{
+        clearResident();
 
-        tbody.appendChild(
+        document.getElementById("searchBox").value = "";
 
-            createVehicleRow(vehicle)
+        document.getElementById("apartmentSelect").selectedIndex = 0;
 
-        );
+        residents = [];
 
-    });
+        await loadExcel();
 
-    updateVehicleSection();
-
-}
-
-
-/*-------------------------------------------------------------
- Create Vehicle Row
---------------------------------------------------------------*/
-
-function createVehicleRow(vehicle){
-
-    const tr=document.createElement("tr");
-
-    tr.innerHTML=`
-
-        <td>${vehicle.type}</td>
-
-        <td>${vehicle.make}</td>
-
-        <td>${vehicle.model}</td>
-
-        <td>
-
-            <strong>
-
-                ${vehicle.plate}
-
-            </strong>
-
-        </td>
-
-    `;
-
-    return tr;
+    };
 
 }
 
 
-/*-------------------------------------------------------------
- Vehicle Section
---------------------------------------------------------------*/
-
-function updateVehicleSection(){
-
-    const section=document.getElementById(
-        "vehicleSection"
-    );
-
-    if(
-        currentResident &&
-        currentResident.vehicles.length>0
-    ){
-
-        section.classList.remove("hidden");
-
-    }
-    else{
-
-        section.classList.add("hidden");
-
-    }
-
-}
-
-
-/*-------------------------------------------------------------
- Vehicle Count
---------------------------------------------------------------*/
-
-function vehicleCount(){
-
-    if(!currentResident)
-        return 0;
-
-    return currentResident.vehicles.length;
-
-}
-
-
-/*-------------------------------------------------------------
- Refresh Vehicle Data
---------------------------------------------------------------*/
-
-function refreshVehicles(){
-
-    if(!currentResident)
-        return;
-
-    renderVehicles(
-
-        currentResident.vehicles
-
-    );
-
-}
 /*=============================================================
- UI Refresh
-==============================================================*/
+ About Dialog
+=============================================================*/
 
-/*-------------------------------------------------------------
- Refresh Entire Screen
---------------------------------------------------------------*/
+function openAboutDialog() {
 
-function refreshUI(){
+    const modal = document.getElementById("aboutModal");
 
-    if(!currentResident)
+    if (modal)
+        modal.classList.remove("hidden");
+
+}
+
+function closeAboutDialog() {
+
+    const modal = document.getElementById("aboutModal");
+
+    if (modal)
+        modal.classList.add("hidden");
+
+}
+
+
+/*=============================================================
+ Summary Refresh
+=============================================================*/
+
+function refreshDashboardSummary() {
+
+    if (!currentResident)
         return;
 
-    populateOwner(currentResident);
+    setText(
+        "familyCount",
+        currentResident.family.length
+    );
+
+    setText(
+        "vehicleCount",
+        currentResident.vehicles.length
+    );
+
+    setText(
+        "emergencyCount",
+        currentResident.emergency.length
+    );
+
+    setText(
+        "occupancySummary",
+        currentResident.owner.occupiedBy
+    );
+
+}
+
+
+/*=============================================================
+ Full UI Refresh
+=============================================================*/
+
+function refreshUI() {
+
+    if (!currentResident)
+        return;
+
+    populateOwner();
+
+    refreshDashboardSummary();
 
     renderFamily(currentResident.family);
 
@@ -1210,238 +709,245 @@ function refreshUI(){
 
     renderVehicles(currentResident.vehicles);
 
-    registerButtons();
-
 }
 
 
-/*-------------------------------------------------------------
- Hide All Sections
---------------------------------------------------------------*/
+/*=============================================================
+ Initialization
+=============================================================*/
 
-function hideAllSections(){
+function initializeUI() {
 
-    document
-        .getElementById("profileSection")
-        .classList.add("hidden");
+    hideAllSections();
 
-    document
-        .getElementById("familySection")
-        .classList.add("hidden");
+    registerActionButtons();
 
-    document
-        .getElementById("emergencySection")
-        .classList.add("hidden");
+    registerCopyActions();
 
-    document
-        .getElementById("vehicleSection")
-        .classList.add("hidden");
+    registerRefreshButton();
 
 }
 
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeUI
+);/*=============================================================
+ Clear Resident
+=============================================================*/
 
-/*-------------------------------------------------------------
- Clear Resident Data
---------------------------------------------------------------*/
+function clearResident() {
 
-function clearResident(){
+    currentResident = null;
 
-    currentResident=null;
+    const fields = [
+        "ownerName",
+        "occupancyType",
+        "apartmentNo",
+        "floor",
+        "moveInDate",
+        "mobile",
+        "email",
+        "officeAddress",
+        "address",
+        "familyCount",
+        "vehicleCount",
+        "emergencyCount",
+        "occupancySummary"
+    ];
 
-    clearProfile();
+    fields.forEach(id => {
 
-    document.getElementById("familyTableBody").innerHTML=
-    `
-    <tr>
-        <td colspan="3" class="empty">
-            No family member information available
-        </td>
-    </tr>
-    `;
+        const el = document.getElementById(id);
 
-    document.getElementById("emergencyTableBody").innerHTML=
-    `
-    <tr>
-        <td colspan="3" class="empty">
-            No emergency contacts available
-        </td>
-    </tr>
-    `;
+        if (el)
+            el.textContent = "-";
 
-    document.getElementById("vehicleTableBody").innerHTML=
-    `
-    <tr>
-        <td colspan="4" class="empty">
-            No vehicle information available
-        </td>
-    </tr>
-    `;
+    });
+
+    document.getElementById("familyTableBody").innerHTML = "";
+    document.getElementById("vehicleTableBody").innerHTML = "";
+    document.getElementById("emergencyTableBody").innerHTML = "";
 
     hideAllSections();
 
 }
 
 
-/*-------------------------------------------------------------
- Refresh Button
---------------------------------------------------------------*/
+/*=============================================================
+ Search Result Highlight
+=============================================================*/
 
-const refreshButton=document.getElementById("refreshBtn");
+function highlightSearchBox() {
 
-if(refreshButton){
+    const box = document.getElementById("searchBox");
 
-    refreshButton.addEventListener(
+    if (!box)
+        return;
 
-        "click",
+    box.classList.add("search-highlight");
 
-        ()=>{
+    setTimeout(() => {
 
-            document.getElementById("searchBox").value="";
+        box.classList.remove("search-highlight");
 
-            document.getElementById("apartmentSelect").selectedIndex=0;
-
-            clearResident();
-
-            loadExcel();
-
-        }
-
-    );
+    }, 1200);
 
 }
 
 
-/*-------------------------------------------------------------
- Double Click Apartment Number
- Copy Apartment Number
---------------------------------------------------------------*/
-
-const apartmentLabel=document.getElementById("apartmentNo");
-
-if(apartmentLabel){
-
-    apartmentLabel.addEventListener(
-
-        "dblclick",
-
-        ()=>{
-
-            if(currentResident){
-
-                copyToClipboard(
-
-                    currentResident.apartment
-
-                );
-
-            }
-
-        }
-
-    );
-
-}
-
-
-/*-------------------------------------------------------------
- Double Click Mobile
- Copy Mobile
---------------------------------------------------------------*/
-
-const mobileLabel=document.getElementById("mobile");
-
-if(mobileLabel){
-
-    mobileLabel.addEventListener(
-
-        "dblclick",
-
-        ()=>{
-
-            if(currentResident){
-
-                copyToClipboard(
-
-                    currentResident.owner.mobile
-
-                );
-
-            }
-
-        }
-
-    );
-
-}
-
-
-/*-------------------------------------------------------------
+/*=============================================================
  Keyboard Shortcuts
+=============================================================*/
 
-Ctrl + F = Search Box
+function registerKeyboardShortcuts() {
 
-Esc = Clear
+    document.addEventListener("keydown", function (e) {
 
-Ctrl + P = Print
---------------------------------------------------------------*/
+        /* Ctrl + F */
 
-document.addEventListener(
-
-    "keydown",
-
-    function(e){
-
-        if(e.ctrlKey && e.key==="f"){
+        if (e.ctrlKey && e.key.toLowerCase() === "f") {
 
             e.preventDefault();
 
-            document
-                .getElementById("searchBox")
-                .focus();
+            document.getElementById("searchBox").focus();
+
+            highlightSearchBox();
 
         }
 
-        if(e.key==="Escape"){
+        /* Escape */
+
+        if (e.key === "Escape") {
 
             clearResident();
 
-            document
-                .getElementById("searchBox")
-                .value="";
+            document.getElementById("searchBox").value = "";
 
-            document
-                .getElementById("apartmentSelect")
-                .selectedIndex=0;
+            document.getElementById("apartmentSelect").selectedIndex = 0;
 
         }
 
-        if(e.ctrlKey && e.key==="p"){
+        /* Ctrl + P */
+
+        if (e.ctrlKey && e.key.toLowerCase() === "p") {
 
             e.preventDefault();
 
-            printProfile();
+            if (currentResident)
+                printProfile();
 
         }
+
+    });
+
+}
+
+
+/*=============================================================
+ Responsive Helpers
+=============================================================*/
+
+function scrollToProfile() {
+
+    const profile = document.getElementById("profileSection");
+
+    if (!profile)
+        return;
+
+    profile.scrollIntoView({
+
+        behavior: "smooth",
+
+        block: "start"
+
+    });
+
+}
+
+
+/*=============================================================
+ Display Resident
+=============================================================*/
+
+function displayResident(resident) {
+
+    renderResident(resident);
+
+    if (window.innerWidth < 768) {
+
+        scrollToProfile();
+
+    }
+
+}
+
+
+/*=============================================================
+ Search Wrapper
+=============================================================*/
+
+function showResident(resident) {
+
+    if (!resident) {
+
+        updateStatus(
+
+            "Resident not found.",
+
+            "warning"
+
+        );
+
+        return;
+
+    }
+
+    displayResident(resident);
+
+}
+
+
+/*=============================================================
+ Window Resize
+=============================================================*/
+
+window.addEventListener(
+
+    "resize",
+
+    function () {
+
+        if (!currentResident)
+            return;
+
+        refreshUI();
 
     }
 
 );
 
 
-/*-------------------------------------------------------------
- Initialize UI
---------------------------------------------------------------*/
+/*=============================================================
+ Startup
+=============================================================*/
 
 document.addEventListener(
 
     "DOMContentLoaded",
 
-    ()=>{
+    function () {
+
+        initializeUI();
+
+        registerKeyboardShortcuts();
 
         hideAllSections();
-
-        registerButtons();
 
     }
 
 );
+
+
+/*=============================================================
+ End of File
+=============================================================*/
