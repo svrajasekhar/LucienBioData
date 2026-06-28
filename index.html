@@ -1,0 +1,541 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Lucien Resident Directory&lt;/title&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="stylesheet" href="css/style.css"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Google Font --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Font Awesome --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="stylesheet"</p>
+<p class="p1"><span class="Apple-converted-space">        </span>href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- SheetJS --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"&gt;&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div id="loadingOverlay"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="loader-card"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="spinner"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Loading Resident Directory&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Please wait while resident information is loaded...&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="header-container"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1&gt;Lucien Resident Directory&lt;/h1&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;Sree Daksha Lucien Apartment&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="refreshBtn"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;i class="fa-solid fa-rotate"&gt;&lt;/i&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>Refresh</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;main class="container"&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Dashboard Cards --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;section class="dashboard"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="card blue"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h3&gt;Total Apartments&lt;/h3&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h1 id="totalFlats"&gt;0&lt;/h1&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="card green"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h3&gt;Owners&lt;/h3&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h1 id="ownerCount"&gt;0&lt;/h1&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="card orange"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h3&gt;Tenants&lt;/h3&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h1 id="tenantCount"&gt;0&lt;/h1&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="card purple"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h3&gt;Total Residents&lt;/h3&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h1 id="residentCount"&gt;0&lt;/h1&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Search --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;section class="search-card"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;i class="fa-solid fa-magnifying-glass"&gt;&lt;/i&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">Resident Search</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="search-grid"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">Apartment Number</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;select id="apartmentSelect"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;option value=""&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">Select Apartment</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/option&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/select&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">Search by Name / Mobile</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;input</p>
+<p class="p2"><br></p>
+<p class="p1">type="text"</p>
+<p class="p2"><br></p>
+<p class="p1">id="searchBox"</p>
+<p class="p2"><br></p>
+<p class="p1">placeholder="Enter owner name or mobile"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="button-area"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;button id="searchBtn" class="primary-btn"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;i class="fa-solid fa-search"&gt;&lt;/i&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">Search</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;button id="clearBtn" class="secondary-btn"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">Clear</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Status --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div id="statusMessage" class="status"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">Waiting to load Excel...</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Resident Profile --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;section id="profileSection" class="hidden"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="profile-card"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="profile-header"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="avatar"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;i class="fa-solid fa-user"&gt;&lt;/i&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h2 id="ownerName"&gt;Resident Name&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;p id="occupancyType"&gt;Owner Occupied&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="info-grid"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="info-box"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;label&gt;Apartment&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;span id="apartmentNo"&gt;-&lt;/span&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="info-box"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;label&gt;Floor&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;span id="floor"&gt;-&lt;/span&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="info-box"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;label&gt;Move-in Date&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;span id="moveInDate"&gt;-&lt;/span&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="info-box"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;label&gt;Mobile&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;span id="mobile"&gt;-&lt;/span&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="info-box"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;label&gt;Email&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;span id="email"&gt;-&lt;/span&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="info-box"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;label&gt;Permanent Address&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;span id="address"&gt;-&lt;/span&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="action-buttons"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;button id="callBtn"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;i class="fa-solid fa-phone"&gt;&lt;/i&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">Call</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;button id="whatsappBtn"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;i class="fa-brands fa-whatsapp"&gt;&lt;/i&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">WhatsApp</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;button id="copyBtn"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;i class="fa-solid fa-copy"&gt;&lt;/i&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">Copy Mobile</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;button id="printBtn"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;i class="fa-solid fa-print"&gt;&lt;/i&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">Print</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p1">&lt;!-- ===========================================================</p>
+<p class="p1"><span class="Apple-converted-space">     </span>FAMILY MEMBERS</p>
+<p class="p1">=========================================================== --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;section id="familySection" class="hidden"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="content-card"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="section-title"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;i class="fa-solid fa-people-group"&gt;&lt;/i&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2&gt;Family Members&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="table-responsive"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;table class="data-table"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;thead&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;th width="40%"&gt;Name&lt;/th&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;th width="35%"&gt;Relationship&lt;/th&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;th width="25%"&gt;Age&lt;/th&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/thead&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;tbody id="familyTableBody"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;td colspan="3" class="empty"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                            </span>No family member information available</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/td&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/tbody&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/table&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- ===========================================================</p>
+<p class="p1"><span class="Apple-converted-space">     </span>EMERGENCY CONTACTS</p>
+<p class="p1">=========================================================== --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;section id="emergencySection" class="hidden"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="content-card"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="section-title"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;i class="fa-solid fa-phone-volume"&gt;&lt;/i&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2&gt;Emergency Contacts&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="table-responsive"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;table class="data-table"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;thead&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;th&gt;Name&lt;/th&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;th&gt;Relationship&lt;/th&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;th&gt;Mobile&lt;/th&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/thead&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;tbody id="emergencyTableBody"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;td colspan="3" class="empty"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                            </span>No emergency contacts available</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/td&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/tbody&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/table&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- ===========================================================</p>
+<p class="p1"><span class="Apple-converted-space">     </span>VEHICLES</p>
+<p class="p1">=========================================================== --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;section id="vehicleSection" class="hidden"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="content-card"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="section-title"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;i class="fa-solid fa-car-side"&gt;&lt;/i&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2&gt;Vehicle Information&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="table-responsive"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;table class="data-table"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;thead&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;th&gt;Vehicle Type&lt;/th&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;th&gt;Make&lt;/th&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;th&gt;Model&lt;/th&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;th&gt;Registration No.&lt;/th&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/thead&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;tbody id="vehicleTableBody"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;td colspan="4" class="empty"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                            </span>No vehicle details available</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/td&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/tr&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/tbody&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/table&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- ===========================================================</p>
+<p class="p1"><span class="Apple-converted-space">     </span>FOOTER</p>
+<p class="p1">=========================================================== --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;footer&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="footer-left"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;strong&gt;Lucien Resident Directory&lt;/strong&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="footer-right"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span id="lastUpdated"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>Data Source :</p>
+<p class="p1"><span class="Apple-converted-space">            </span>KYC Lucien.xlsx</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/span&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/footer&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/main&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- ===========================================================</p>
+<p class="p1"><span class="Apple-converted-space">     </span>TOAST MESSAGE</p>
+<p class="p1">=========================================================== --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div id="toast" class="toast"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>Copied Successfully</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- ===========================================================</p>
+<p class="p1"><span class="Apple-converted-space">     </span>JAVASCRIPT</p>
+<p class="p1">=========================================================== --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script src="js/excel.js"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;script src="js/search.js"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;script src="js/ui.js"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;script src="js/app.js"&gt;&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
